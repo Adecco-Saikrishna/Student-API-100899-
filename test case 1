@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Shopping Mall</title>
+
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body{
+        background:#f4f4f4;
+        padding:20px;
+    }
+
+    h1{
+        text-align:center;
+        margin-bottom:30px;
+        color:#333;
+    }
+
+    .container{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+        gap:20px;
+    }
+
+    .card{
+        background:white;
+        border-radius:10px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        overflow:hidden;
+        text-align:center;
+        padding-bottom:15px;
+    }
+
+    .card img{
+        width:100%;
+        height:250px;
+        object-fit:cover;
+    }
+
+    .card h3{
+        margin:10px 0;
+        color:#333;
+    }
+
+    .price{
+        color:green;
+        font-size:18px;
+        font-weight:bold;
+        margin-bottom:10px;
+    }
+
+    .btn-group{
+        display:flex;
+        justify-content:center;
+        gap:10px;
+    }
+
+    .btn{
+        background:blue;
+        color:white;
+        border:none;
+        padding:10px 15px;
+        border-radius:5px;
+        cursor:pointer;
+        font-size:14px;
+    }
+
+    .btn:hover{
+        background:#0047ab;
+    }
+</style>
+</head>
+<body>
+
+<h1>Royal Shopping Mall</h1>
+
+<div class="container">
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 1">
+        <h3>Floral Dress</h3>
+        <p class="price">₹999</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 2">
+        <h3>Party Wear Dress</h3>
+        <p class="price">₹1499</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 3">
+        <h3>Casual Dress</h3>
+        <p class="price">₹799</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 4">
+        <h3>Maxi Dress</h3>
+        <p class="price">₹1299</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 5">
+        <h3>Summer Dress</h3>
+        <p class="price">₹899</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 6">
+        <h3>Denim Dress</h3>
+        <p class="price">₹1199</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 7">
+        <h3>Ethnic Dress</h3>
+        <p class="price">₹1599</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 8">
+        <h3>Designer Dress</h3>
+        <p class="price">₹1999</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 9">
+        <h3>Evening Gown</h3>
+        <p class="price">₹2499</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <img src="https://via.placeholder.com/250x250" alt="Dress 10">
+        <h3>Wedding Dress</h3>
+        <p class="price">₹4999</p>
+        <div class="btn-group">
+            <button class="btn">Add to Cart</button>
+            <button class="btn">Buy Now</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
