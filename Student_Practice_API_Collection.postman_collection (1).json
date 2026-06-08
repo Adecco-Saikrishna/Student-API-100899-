@@ -1,0 +1,807 @@
+{
+  "info": {
+    "name": "Student Practice API Collection",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "description": "A complete REST API collection for Postman practice. Covers Authentication (Register/Login/Logout), Product CRUD, User Profile, and Order Management. Base URL uses a variable — set {{base_url}} in your environment.\n\n📌 HOW TO USE:\n1. Import this collection in Postman\n2. Create an Environment and add variable: base_url = https://dummyjson.com\n3. After login, copy the token and set {{token}} in your environment\n4. Practice all endpoints!\n\n🔑 Auth endpoints don't need a token. All others require Bearer Token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://dummyjson.com",
+      "type": "string",
+      "description": "Base URL of the API. Change this in your Postman Environment."
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Token received after login. Set this after calling the Login endpoint."
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "description": "Authentication endpoints — Register, Login, Logout, and Get Current User.",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/add",
+              "host": ["{{base_url}}"],
+              "path": ["users", "add"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"age\": 22,\n  \"email\": \"johndoe@example.com\",\n  \"username\": \"johndoe\",\n  \"password\": \"johndoe123\",\n  \"phone\": \"+91-9876543210\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "📝 **Register a new user.**\n\nMethod: POST\nBody: JSON with user details.\n\n✅ Expected Response: 201 Created with user object.\n\n💡 Practice: Try registering with missing fields and observe validation errors."
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.environment.set(\"token\", jsonData.token);",
+                  "    console.log(\"Token saved to environment!\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"emilys\",\n  \"password\": \"emilyspass\",\n  \"expiresInMins\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "🔑 **Login with username and password.**\n\nMethod: POST\nBody: JSON with credentials.\n\n✅ Expected Response: 200 OK with JWT token.\n\n💡 The test script automatically saves the token to your environment variable `{{token}}`.\n\n📌 Default test credentials: username=emilys, password=emilyspass"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "👤 **Get the currently logged-in user's profile.**\n\nMethod: GET\nAuth: Bearer Token required.\n\n✅ Expected Response: 200 OK with user data.\n\n💡 Practice: Call this WITHOUT the token and see the 401 Unauthorized error."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Auth Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{token}}\",\n  \"expiresInMins\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "🔄 **Refresh your authentication token.**\n\nMethod: POST\nBody: JSON with the existing refresh token.\n\n✅ Expected Response: 200 OK with a new token.\n\n💡 In real apps, tokens expire and need refreshing. This endpoint simulates that."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📦 Products",
+      "description": "Full CRUD operations on Products — Create, Read, Update, Delete, Search, and Filter.",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products?limit=10&skip=0",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Number of products to return"
+                },
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "description": "Number of products to skip (for pagination)"
+                }
+              ]
+            },
+            "description": "📋 **Get a paginated list of all products.**\n\nMethod: GET\nQuery Params: limit, skip (for pagination)\n\n✅ Expected Response: 200 OK with array of products.\n\n💡 Practice: Change limit to 5, skip to 5 — observe how pagination works."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "description": "🔍 **Get a single product by its ID.**\n\nMethod: GET\nURL Param: Product ID (change 1 to any valid product ID)\n\n✅ Expected Response: 200 OK with product object.\n\n💡 Practice: Try an invalid ID like 9999 and observe the 404 Not Found error."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/search?q=phone",
+              "host": ["{{base_url}}"],
+              "path": ["products", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "phone",
+                  "description": "Search keyword"
+                }
+              ]
+            },
+            "description": "🔎 **Search products by keyword.**\n\nMethod: GET\nQuery Param: q (search term)\n\n✅ Expected Response: 200 OK with matching products.\n\n💡 Practice: Try different keywords — laptop, shoes, watch, etc."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Products by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/category/smartphones",
+              "host": ["{{base_url}}"],
+              "path": ["products", "category", "smartphones"]
+            },
+            "description": "🏷️ **Get all products in a specific category.**\n\nMethod: GET\nURL Param: Category name\n\nAvailable categories: smartphones, laptops, fragrances, skincare, groceries, home-decoration, furniture, tops, womens-dresses, womens-shoes, mens-shirts, mens-shoes, mens-watches, womens-watches, womens-bags, womens-jewellery, sunglasses, automotive, motorcycle, lighting\n\n✅ Expected Response: 200 OK with filtered products."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/categories",
+              "host": ["{{base_url}}"],
+              "path": ["products", "categories"]
+            },
+            "description": "📂 **Get list of all available product categories.**\n\nMethod: GET\n\n✅ Expected Response: 200 OK with array of category names.\n\n💡 Use the category names from this response in the 'Get Products by Category' endpoint."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/add",
+              "host": ["{{base_url}}"],
+              "path": ["products", "add"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My New Product\",\n  \"description\": \"This is a product created for practice.\",\n  \"price\": 499.99,\n  \"discountPercentage\": 10,\n  \"rating\": 4.5,\n  \"stock\": 100,\n  \"brand\": \"PracticeBrand\",\n  \"category\": \"smartphones\",\n  \"thumbnail\": \"https://via.placeholder.com/300\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "➕ **Create a new product.**\n\nMethod: POST\nBody: JSON with product details.\n\n✅ Expected Response: 201 Created with the new product object including generated ID.\n\n💡 Practice: Add more fields, try missing required fields, change categories.\n\n⚠️ Note: This is a fake/mock API — data won't actually persist."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product (Full - PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Product Title\",\n  \"description\": \"Fully updated product description.\",\n  \"price\": 999.99,\n  \"discountPercentage\": 15,\n  \"rating\": 4.8,\n  \"stock\": 50,\n  \"brand\": \"UpdatedBrand\",\n  \"category\": \"laptops\",\n  \"thumbnail\": \"https://via.placeholder.com/300\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "✏️ **Fully replace a product (PUT).**\n\nMethod: PUT\nURL Param: Product ID\nBody: Complete product JSON (all fields)\n\n✅ Expected Response: 200 OK with updated product.\n\n💡 PUT replaces the entire resource. Compare with PATCH which only updates specific fields.\n\n📌 Difference — PUT vs PATCH:\n- PUT: Replace everything\n- PATCH: Update only what you send"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product (Partial - PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 1299.99,\n  \"stock\": 200\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "🩹 **Partially update a product (PATCH).**\n\nMethod: PATCH\nURL Param: Product ID\nBody: Only the fields you want to change\n\n✅ Expected Response: 200 OK with merged/updated product.\n\n💡 Only send the fields you want to update — other fields remain unchanged.\n\n📌 Difference — PUT vs PATCH:\n- PUT: Replace everything\n- PATCH: Update only what you send"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1"]
+            },
+            "description": "🗑️ **Delete a product by ID.**\n\nMethod: DELETE\nURL Param: Product ID\nNo body needed.\n\n✅ Expected Response: 200 OK with deleted product info and isDeleted: true.\n\n💡 Practice: Try deleting ID 9999 to see a 404 error response.\n\n⚠️ Note: This is a fake API — data won't actually be deleted."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👥 Users",
+      "description": "User management — Get all users, view a single user, update profile, and delete account.",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?limit=10&skip=0",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "skip",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "👥 **Get a list of all users (admin use).**\n\nMethod: GET\nAuth: Bearer Token\n\n✅ Expected Response: 200 OK with users array.\n\n💡 Practice: Pagination with limit and skip query params."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "👤 **Get a single user by ID.**\n\nMethod: GET\nURL Param: User ID\nAuth: Bearer Token\n\n✅ Expected Response: 200 OK with user object."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/search?q=John",
+              "host": ["{{base_url}}"],
+              "path": ["users", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "John"
+                }
+              ]
+            },
+            "description": "🔎 **Search users by name.**\n\nMethod: GET\nQuery Param: q (name to search)\n\n✅ Expected Response: 200 OK with matching users."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"UpdatedName\",\n  \"email\": \"updated@example.com\",\n  \"phone\": \"+91-9999999999\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "✏️ **Partially update a user profile.**\n\nMethod: PATCH\nURL Param: User ID\nAuth: Bearer Token\nBody: Only fields to update\n\n✅ Expected Response: 200 OK with updated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            },
+            "description": "🗑️ **Delete a user account.**\n\nMethod: DELETE\nURL Param: User ID\nAuth: Bearer Token\n\n✅ Expected Response: 200 OK with isDeleted: true."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🛒 Cart",
+      "description": "Shopping cart operations — view, add, update, and delete carts.",
+      "item": [
+        {
+          "name": "Get All Carts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carts",
+              "host": ["{{base_url}}"],
+              "path": ["carts"]
+            },
+            "description": "🛒 **Get all shopping carts.**\n\nMethod: GET\n\n✅ Expected Response: 200 OK with carts array."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cart by User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carts/user/5",
+              "host": ["{{base_url}}"],
+              "path": ["carts", "user", "5"]
+            },
+            "description": "🛒 **Get a specific user's cart.**\n\nMethod: GET\nURL Param: User ID\n\n✅ Expected Response: 200 OK with user's cart data."
+          },
+          "response": []
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/carts/add",
+              "host": ["{{base_url}}"],
+              "path": ["carts", "add"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1,\n  \"products\": [\n    {\n      \"id\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"id\": 5,\n      \"quantity\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "➕ **Add products to a cart.**\n\nMethod: POST\nBody: userId and array of products with quantities.\n\n✅ Expected Response: 201 Created with new cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/carts/1",
+              "host": ["{{base_url}}"],
+              "path": ["carts", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"merge\": true,\n  \"products\": [\n    {\n      \"id\": 2,\n      \"quantity\": 3\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "✏️ **Update a cart — add or change products.**\n\nMethod: PATCH\nURL Param: Cart ID\nBody: Products to update. Set merge:true to add to existing, false to replace.\n\n✅ Expected Response: 200 OK with updated cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carts/1",
+              "host": ["{{base_url}}"],
+              "path": ["carts", "1"]
+            },
+            "description": "🗑️ **Delete a cart by ID.**\n\nMethod: DELETE\nURL Param: Cart ID\n\n✅ Expected Response: 200 OK with isDeleted: true."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📋 Orders / Posts (Blog)",
+      "description": "Blog post operations to practice POST, GET, PUT, PATCH, DELETE on a resource that behaves like 'Orders' in a typical app.",
+      "item": [
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts?limit=10&skip=0",
+              "host": ["{{base_url}}"],
+              "path": ["posts"],
+              "query": [
+                { "key": "limit", "value": "10" },
+                { "key": "skip", "value": "0" }
+              ]
+            },
+            "description": "📋 **Get all posts/orders with pagination.**\n\nMethod: GET\nQuery Params: limit, skip\n\n✅ Expected Response: 200 OK with posts array."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            },
+            "description": "🔍 **Get a single post by ID.**\n\nMethod: GET\n\n✅ Expected Response: 200 OK with post object."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/add",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "add"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My Practice Post\",\n  \"body\": \"This is the body of my first API practice post.\",\n  \"userId\": 1,\n  \"tags\": [\"practice\", \"api\", \"postman\"],\n  \"reactions\": {\n    \"likes\": 0,\n    \"dislikes\": 0\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "➕ **Create a new post.**\n\nMethod: POST\nBody: JSON with title, body, userId, tags.\n\n✅ Expected Response: 201 Created."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Post (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Fully Updated Post Title\",\n  \"body\": \"This entire post has been replaced using PUT.\",\n  \"userId\": 1,\n  \"tags\": [\"updated\", \"put-method\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "✏️ **Fully update a post using PUT.**\n\nMethod: PUT\nURL Param: Post ID\nBody: All fields\n\n✅ Expected Response: 200 OK with updated post."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Post (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Only Title Updated via PATCH\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "🩹 **Partially update a post using PATCH.**\n\nMethod: PATCH\nURL Param: Post ID\nBody: Only fields to update\n\n✅ Expected Response: 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            },
+            "description": "🗑️ **Delete a post by ID.**\n\nMethod: DELETE\nURL Param: Post ID\n\n✅ Expected Response: 200 OK with isDeleted: true."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Comments on a Post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/1/comments",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1", "comments"]
+            },
+            "description": "💬 **Get all comments for a specific post.**\n\nMethod: GET\nURL Param: Post ID\n\n✅ Expected Response: 200 OK with comments array.\n\n💡 This demonstrates nested resource routes — /posts/:id/comments"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💬 Todos",
+      "description": "Simple todo list — great for understanding basic CRUD with a minimal resource.",
+      "item": [
+        {
+          "name": "Get All Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/todos?limit=10&skip=0",
+              "host": ["{{base_url}}"],
+              "path": ["todos"],
+              "query": [
+                { "key": "limit", "value": "10" },
+                { "key": "skip", "value": "0" }
+              ]
+            },
+            "description": "✅ **Get all todos with pagination.**"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Todo by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/todos/1",
+              "host": ["{{base_url}}"],
+              "path": ["todos", "1"]
+            },
+            "description": "✅ **Get a single todo by ID.**"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Todos by User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/todos/user/1",
+              "host": ["{{base_url}}"],
+              "path": ["todos", "user", "1"]
+            },
+            "description": "✅ **Get all todos belonging to a specific user.**"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Todo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/todos/add",
+              "host": ["{{base_url}}"],
+              "path": ["todos", "add"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"todo\": \"Learn REST APIs with Postman\",\n  \"completed\": false,\n  \"userId\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "➕ **Create a new todo item.**\n\nMethod: POST\n\n✅ Expected Response: 201 Created."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Todo (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/todos/1",
+              "host": ["{{base_url}}"],
+              "path": ["todos", "1"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"completed\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "✏️ **Mark a todo as completed.**\n\nMethod: PATCH\nBody: { completed: true }\n\n✅ Expected Response: 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Todo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/todos/1",
+              "host": ["{{base_url}}"],
+              "path": ["todos", "1"]
+            },
+            "description": "🗑️ **Delete a todo by ID.**\n\nMethod: DELETE\n\n✅ Expected Response: 200 OK with isDeleted: true."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
