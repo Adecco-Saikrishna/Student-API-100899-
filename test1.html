@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Royal Kids Wear Collection</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
+
+    body{
+      background:#f75606;
+      color:#faf7f7;
+    }
+ 
+    header{
+      background:linear-gradient(135deg,#f75f07,#ec5a1f);
+      color:white;
+      padding:20px 50px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    header h1{
+      font-size:2rem;
+    }
+
+    nav a{
+      color:rgb(248, 240, 240);
+      text-decoration:none;
+      margin-left:20px;
+      font-weight:bold;
+    }
+
+    .hero{
+      height:80vh;
+      background:url('https://png.pngtree.com/thumb_back/fw800/background/20220911/pngtree-childrens-clothing-shop-clothing-kids-sell-photo-image_1316261.jpg')center/cover;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      text-align:center;
+      color:rgb(10, 10, 10);
+    }
+
+    .hero h2{
+      font-size:4rem;
+      background:rgba(233, 117, 9, 0.993);
+      padding:10px 20px;
+      border-radius:10px;
+    }
+
+    .hero p{
+      margin-top:15px;
+      font-size:1.2rem;
+      background:rgba(235, 99, 8, 0.836);
+      padding:10px;
+      border-radius:10px;
+    }
+
+    .button-container{
+      
+      margin-top:10px;
+      border:none;
+      background:#f7f4f4;
+      color:rgb(15, 15, 15);
+      border-radius:40px;
+      font-size:1rem;
+    
+      transition:0.3s;
+      gap: 10px; /* space between buttons */
+    
+    }
+
+    .btn:hover{
+      background:#f56606;
+      transform:scale(2.00);
+    }
+
+    .products{
+      padding:60px 40px;
+    }
+
+    .products h2{
+      text-align:center;
+      margin-bottom:40px;
+      font-size:2.5rem;
+      color:#fafbfc;
+    }
+
+    .product-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:rgb(250, 248, 248);
+      border-radius:15px;
+      overflow:hidden;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+    }
+
+    .card img{
+      width:100%;
+      height:320px;
+      object-fit:cover;
+    }
+
+    .card-content{
+      padding:20px;
+      text-align:center;
+    }
+
+    .card-content h3{
+      margin-bottom:10px;
+      color:#f36709;
+    }
+
+    .price{
+      font-size:1.2rem;
+      margin-bottom:15px;
+      font-weight:bold;
+    }
+
+    footer{
+      background:#f04908;
+      color:rgb(12, 12, 12);
+      text-align:center;
+      padding:20px;
+      margin-top:50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Royal Kids Ware</h1>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Collections</a>
+      <a href="#">Shop</a>
+      <a href="#">Contact</a>
+      <a href="#">Login</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Elegant Dresses Collection</h2>
+    <p>Choose your perfect style for every occasion</p>
+
+    <button class="btn" onclick="shopNow()">
+      Shop Now
+    </button>
+  </section>
+
+  <section class="products">
+   <h2 style="font-family: 'Times New Roman';">
+  Kids Trending Dresses collections
+</h2>
+
+    <div class="product-grid">
+
+      <div class="card">
+        <img src="https://i.pinimg.com/736x/0a/4d/72/0a4d7246168c58835bae4c578bd9baee.jpg">
+
+        <div class="card-content">
+          <h3>Traditional Dressaes</h3>
+          <p class="price">₹999</p>
+          <button class="btn">Add to Cart</button>
+          <button class="btn">Buy Now</button>
+        </div>
+      </div>
+           
+      <div class="card">
+        <img src="https://static-assets-web.flixcart.com/fk-p-transcode-video/autostitch/kids/KDEG76TGURFTZYTY_1660220173/manifest.jpg">
+
+         <div class="card-content"> 
+          <h3>Designer Wear</h3>
+          <p class="price">₹499</p>
+          <button class="btn">Add to Cart</button>
+          <button class="btn">Buy Now</button>
+          
+        </div>
+      </div>
+ 
+      <div class="card">
+        <img src="https://tse2.mm.bing.net/th/id/OIP.irfzRt2SPvcU-1mjB2tvHQHaJ4?pid=ImgDet&w=191&h=254&c=7&o=7&rm=3">
+
+        <div class="card-content">
+          <h3>Party Wear </h3>
+          <p class="price">₹799</p>
+          <button class="btn">Add to Cart</button>
+          <button class="btn">Buy Now</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://tse2.mm.bing.net/th/id/OIP.irfzRt2SPvcU-1mjB2tvHQHaJ4?pid=ImgDet&w=191&h=254&c=7&o=7&rm=3">
+
+        <div class="card-content">
+          <h3>Modern Fashion wear for Kids</h3>
+          <p class="price">₹1400</p>
+          <button class="btn">Add to Cart</button>
+          <button class="btn">Buy Now</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Royal Dresses | Fashion Store</p>
+  </footer>
+
+  <script>
+    function shopNow(){
+      alert("Welcome to Royal Dresses Shopping");
+    }
+  </script>
+
+</body>
+</html>
