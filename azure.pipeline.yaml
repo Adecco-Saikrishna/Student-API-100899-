@@ -1,0 +1,113 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  terraformVersion: "1.9.0"
+  environment: "production"
+
+stages:
+
+# -------------------------
+# BUILD
+# -------------------------
+- stage: Build
+  displayName: "Build Application"
+
+  jobs:
+  - job: BuildApp
+    steps:
+
+    - task: NodeTool@0
+      inputs:
+        versionSpec: "20.x"
+
+    - script: |
+        npm install
+        npm test
+        npm run build
+      displayName: "Build and Test"
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: "$(Build.SourcesDirectory)"
+        artifactName: "application"
+
+
+# -------------------------
+# TERRAFORM PLAN
+# -------------------------
+- stage: TerraformPlan
+  displayName: "Terraform Plan"
+  dependsOn: Build
+
+  jobs:
+  - job: Terraform
+    steps:
+
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: "$(terraformVersion)"
+
+    - script: |
+        terraform init
+        terraform validate
+        terraform plan -out=tfplan
+      displayName: "Terraform Plan"
+
+
+# -------------------------
+# PRODUCTION DEPLOYMENT
+# -------------------------
+- stage: Production
+  displayName: "Production Deployment"
+
+  dependsOn: TerraformPlan
+
+  condition: succeeded()
+
+  jobs:
+  - deployment: DeployProduction
+    environment: "production"
+
+    strategy:
+      runOnce:
+        deploy:
+
+          steps:
+
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: "$(terraformVersion)"
+
+          - script: |
+              terraform init
+              terraform apply -auto-approve
+            displayName: "Terraform Apply"
+
+          - script: |
+              npm install
+              npm run build
+            displayName: "Build Application"
+
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: "Azure-Production-ServiceConnection"
+              appType: "webAppLinux"
+              appName: "my-production-app-123"
+              package: "$(System.DefaultWorkingDirectory)/**/*.zip"
+            displayName: "Deploy Application"
+
+            automate shedule deployment 
+            schedules:
+- cron: "30 16 * * *"
+  displayName: "Production Deployment"
+  branches:
+    include:
+      - main
+  always: true
+  
